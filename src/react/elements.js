@@ -3,9 +3,6 @@ export class Element {
     this.props = props
     this.type = type
   }
-  setState(){
-
-  }
 }
 
 /*

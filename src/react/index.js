@@ -1,11 +1,13 @@
 import createUnit from "./unit";
 import {createElement} from "./elements";
+import {Component} from "./Component";
 import $ from 'jquery'
 
 const React = {
   render,
   rootId:0,
-  createElement
+  createElement,
+  Component
 }
 
 /*
@@ -18,10 +20,11 @@ function render (element,container){
   const unitInstance = createUnit(element)
   const markup = unitInstance.getMarkUp(React.rootId)
   $(container).html(markup)
-
+  $(document).trigger('mounted')
 }
 
 export default React
 export {
-  createElement
+  createElement,
+  Component
 }

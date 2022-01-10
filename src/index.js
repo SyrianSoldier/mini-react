@@ -1,19 +1,24 @@
-import React,{createElement} from "./react";
+import React,{createElement,Component} from "./react";
 
-//js中出现html代码会被babel转义
-const element = (
-  <div>
-    <span>hello react</span>
-  </div>
-)
-/* 转义后的东西 */
-function click (){
-  console.log('点击事件')
+class Person extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {number:1}
+  }
+  componentWillMount(){
+    console.log('组件将要被挂载')
+  }
+  componentDidMount(){
+    console.log('组件已被挂载')
+  }
+  click = () => {
+    console.log('被点击了')
+  }
+  render(){
+    const p = createElement('p',null,this.state.number)
+    const button = createElement('button',{onClick:this.click},'+')
+    return createElement('div',null,p,button)
+  }
 }
-const elementVirtualDom = React.createElement(
-  'div',
-  null,
-  createElement('span',{style:{color:'red',backgroundColor:'orange'},onClick:click},'hello react')
-)
-/* 将虚拟DOM转为真实节点插入页面中 */
-React.render(elementVirtualDom,document.querySelector('#root'))
+
+React.render(createElement(Person,null),document.querySelector('#root'))
