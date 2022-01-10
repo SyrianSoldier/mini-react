@@ -1,70 +1,47 @@
-# Getting Started with Create React App
+## 1. 正则用法
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> ####将驼峰转为横线写法
 
-## Available Scripts
+```js
+var str = 'backgroundColorName'
 
-In the project directory, you can run:
+str.replace(/[A-Z]/g,matched => `-${matched.toLowerCase()}`) // background-color-name
+```
 
-### `npm start`
+## 2. Object Api
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+> ####将object转成二维数组
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```js
+var obj = {
+    name:'张三',
+    age:18
+}
+var objArr = Object.entries(obj) // [['name','张三'],['age':18]]
+```
 
-### `npm test`
+## 3. React API 的实现 (15以下版本)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+####	3-1: React.render(element,container)
 
-### `npm run build`
+```jsx
+/*
+ 	1: container为容器
+ 	2: element参数能接受的类型: 
+ 		2-1: 字符串,数字. 对于字符串和数字将会直接生成标记插入DOM中
+ 		2-2: DOM元素, 如<div/>, 将会被babel转义成,React.CreateElement('div',null,null), 这个函数的返回值为虚拟DOM
+ 		2-3: 组件元素, 如<Person name="张三"/>, 如2-2一样会被转移为React.CreateElement(Person,{name:'张三'},null)
+	3: render函数的作用: 总的来说, 就是将虚拟DOM或者基本数据类型转为真实DOM,并插入容器中
+*/
+import $ from 'jquery'
+import {CreateElement} from 'react'
+import {CreateUnit} from './unit'
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+function render(element,container){
+    const virtualDom = CreateElement(element) //生成虚拟DOM
+    const unitInstance = createUnit(virtualDom) // element有多种类型, createUnit为工厂函数, 返回一个实例
+    const markUp = unitInstance.getMarkUp(rootId)// 调用该实例getMarkUp方法, 就可获得对应的, 正确的真实DOM字符串
+    $(document).html(markUp)  // 插入页面中
+}
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
