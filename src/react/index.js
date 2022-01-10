@@ -1,8 +1,11 @@
 import createUnit from "./unit";
+import {createElement} from "./elements";
 import $ from 'jquery'
+
 const React = {
   render,
-  rootId:0
+  rootId:0,
+  createElement
 }
 
 /*
@@ -19,3 +22,6 @@ function render (element,container){
 }
 
 export default React
+export {
+  createElement
+}
