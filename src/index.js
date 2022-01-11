@@ -8,16 +8,25 @@ class Person extends Component {
   componentWillMount(){
     console.log('组件将要被挂载')
   }
+  shouldComponentUpdate(nextProps, nextState) { 
+    console.log('组件将要更新',nextProps, nextState)
+    return true
+  }
+  componentDidUpdate() { 
+    console.log('组件已经更新')
+  }
   componentDidMount(){
-    console.log('组件已被挂载')
+    setInterval(() => {
+      this.setState({
+        number:this.state.number + 1
+      })
+    },1000)
   }
   click = () => {
     console.log('被点击了')
   }
   render(){
-    const p = createElement('p',null,this.state.number)
-    const button = createElement('button',{onClick:this.click},'+')
-    return createElement('div',null,p,button)
+    return this.state.number
   }
 }
 

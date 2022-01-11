@@ -1,6 +1,6 @@
 import createUnit from "./unit";
 import {createElement} from "./elements";
-import {Component} from "./Component";
+import {Component} from "./component";
 import $ from 'jquery'
 
 const React = {
