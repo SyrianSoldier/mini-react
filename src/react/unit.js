@@ -29,6 +29,44 @@ class TextUnit extends Unit{
 }
 
 class NativeUnit extends Unit {
+  update(nextElement) { 
+    console.log('11')
+    // 更新属性
+    const oldProps = this._currentElement.props
+    const newProps = nextElement.props
+    this.updateProperties(oldProps,newProps)
+  }
+  updateProperties(oldProps,newProps) { 
+    console.log(oldProps, newProps)
+    let propName
+
+    for (propName  in oldProps) { 
+      if (!newProps.hasOwnProperty(propName)) {   // 老属性的值新属性没有， 即新属性删除时， 或者值改变时候 
+        $(`[data-reactid="${this._rootId}"]`).removeAttr(propName)
+      }
+      if (/^on[A-Z]/.test(propName)) { //将所有老事件移除绑定新事件
+        $(document).undelegate(`.${this.rootId}`)
+      }
+    }
+
+    for (propName in newProps) { 
+      if (propName === 'children') {
+        continue
+      } else if (/^on[A-Z]/.test(propName)) {
+        $(document).delegate(`[data-reactid="${this._rootId}"]`, `${propName}.${this.rootId}`, newProps[propName])
+      } else if (propName === 'style') { 
+        const styles = newProps[propName]
+        for (let key in styles) {
+          $(`[data-reactid="${this._rootId}"]`).css(key,styles[key])
+        }
+      } else if (propName === 'className') { 
+        $(`[data-reactid="${this._rootId}"]`)[0].className = newProps[propName] // 将jqery转为原生（还记得这种转换方法吗……）， 通过className属性赋值
+      } else {
+        $(`[data-reactid="${this._rootId}"]`).attr(propName,newProps[propName])
+      }
+    }
+  }
+
   getMarkUp(rootId) {
     this._rootId = rootId
     const {type,props} = this._currentElement
@@ -65,6 +103,7 @@ class NativeUnit extends Unit {
     return tagStart + '>' + tagContent + tagEnd
   }
 }
+
 class CompositeUnit extends Unit {
   update(nextElement,partialState) { 
     this._currentElement = nextElement || this._currentElement // 传了虚拟dom就改变, 否则改变
@@ -72,10 +111,9 @@ class CompositeUnit extends Unit {
     let nextState = Object.assign(this._componentInstance.state, partialState)
     let nextProps = this._currentElement.props // 虚拟dom改变了props就改变否则不变
     const beforeUpdate = this._componentInstance.shouldComponentUpdate
-    if (beforeUpdate && !beforeUpdate) { 
+    if (beforeUpdate && !beforeUpdate(nextProps, nextState)) { //调用更新前的钩子
      return  
     }
-    beforeUpdate(nextProps, nextState) //调用更新前的钩子
     // 拿出上次render的虚拟dom, 和本次渲染的虚拟dom
     const preVirtualDom = this._renderedUnitInstance._currentElement
     const nextVirtualDom = this._componentInstance.render()

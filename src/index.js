@@ -5,28 +5,14 @@ class Person extends Component {
     super(props);
     this.state = {number:1}
   }
-  componentWillMount(){
-    console.log('组件将要被挂载')
+  handleClick = () => {
+    this.setState({number:this.state.number + 1})
   }
-  shouldComponentUpdate(nextProps, nextState) { 
-    console.log('组件将要更新',nextProps, nextState)
-    return true
-  }
-  componentDidUpdate() { 
-    console.log('组件已经更新')
-  }
-  componentDidMount(){
-    setInterval(() => {
-      this.setState({
-        number:this.state.number + 1
-      })
-    },1000)
-  }
-  click = () => {
-    console.log('被点击了')
-  }
-  render(){
-    return this.state.number
+  render() {
+    const { number} = this.state
+    const p = createElement('p', {}, this.state.number)
+    const button = createElement('button', {onClick:this.handleClick},'+')
+    return createElement('div', { style: {backgroundColor:number % 2 === 0? 'green':'red',color: number %2 === 0?'red':'green'}}, p,button)
   }
 }
 
